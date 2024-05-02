@@ -10,11 +10,19 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ConsoleController extends AbstractController
 {
-    #[Route('/console', name: 'app_console')]
-    public function index(): Response
+    #[Route('/console/{id}', name: 'app_console')]
+    public function index(EntityManagerInterface $entityManager, int $id): Response
     {
+
+        $product = $entityManager->GetRepository(Console::class)->find($id);
+
+        if (!$product) {
+            throw $this->createNotFoundException('Produit non trouvé'. $id);    
+        }
+
         return $this->render('console/index.html.twig', [
             'controller_name' => 'ConsoleController',
+            'name' => $product->GetName(),
         ]);
     }
 
@@ -29,6 +37,7 @@ class ConsoleController extends AbstractController
         $product->setImage('ps5d500.png');
         $product->setVideo('e2T1s1X6f8k');
         $product->setLink('https://www.playstation.com/fr-be/ps5/');
+
         
         // tell Doctrine you want to (eventually) save the Product (no queries yet)
         $entityManager->persist($product);
@@ -37,5 +46,6 @@ class ConsoleController extends AbstractController
         $entityManager->flush();
 
         return new Response('Saved new product with id '.$product->getId());
+
     }
 }
