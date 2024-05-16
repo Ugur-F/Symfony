@@ -28,9 +28,9 @@ class SigninController extends AbstractController
         {
             $user = $form->getData();
 
-            $PlaintextPassword = $user->getPassword(); 
-
-            $hashedPassword = $passwordHasher->hashPassword($user, $PlaintextPassword);
+            $plaintextPassword = $user->getPassword(); 
+            $hashedPassword = $passwordHasher->hashPassword($user, $plaintextPassword);
+            $user->setPassword($hashedPassword);
 
             $entityManager->persist($user);
             $entityManager->flush();
