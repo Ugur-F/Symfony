@@ -36,9 +36,14 @@ class SigninController extends AbstractController
             $entityManager->flush();
 
             // Afficher un message "Inscription réussi"
-           
+            $this->addFlash('success', 'Inscription réussi!');
+
+            // Rediriger vers la page de connexion
+            // return $this->redirectToRoute('app_login');
+
         } else {
             // Afficher un message d'erreur
+            $this->addFlash('error', 'Erreur lors de l\'inscription');
         }
 
         return $this->render('signin/index.html.twig', [
